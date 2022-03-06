@@ -79,14 +79,8 @@ def gameover():
     alive = False
     gotext = gofont.render('Game Over!', True, (255, 255, 255))
     ngtext = gofont.render('press space to continue', False, (255, 255, 255))
-    for ast in asteroids:
-        ast.x = -99
-        ast.move()
-        ast.rotate()
-    for indexx in range(len(aliens)):
-        aliens.pop()
-
-
+    asteroids.clear()
+    aliens.clear()
     pygame.display.flip()
     while not alive:
         setscore()
@@ -326,6 +320,7 @@ if __name__ == '__main__':
                     down = False
                 if event.key == pygame.K_SPACE:
                     beaming = False
+                    beamrect = pygame.Rect((1, 1), (-50, 0))
                     tractorsound.stop()
         if left:
             xv = -3
