@@ -71,6 +71,7 @@ def loadhs():
 
 
 def gameover():
+    tractorsound.stop()
     exploder.play()
     global running
     global alive
@@ -155,7 +156,7 @@ def addasteroids():
 def beam(x, y):
     global beamstate
     global beamrect
-    beamrect = pygame.Rect((x, y - 20), (64, 100))
+    beamrect = pygame.Rect((x + 5, y - 15), (50, 80))
     # pygame.draw.rect(window,'green',beamrect)
     if beamstate <= 0:
         window.blit(tractorimgs[0], (x, y))
@@ -241,16 +242,14 @@ class alien:
 
 def suckalien(alienX, alienY, beamX, beamY):
     distancex = math.sqrt((math.pow(beamX - alienX, 2)))
-    distancey = math.sqrt((math.pow(beamY - 10 - alienY, 2)))
+    distancey = math.sqrt((math.pow(beamY - alienY, 2)))
     if distancex < 40 and distancey < 80:
-        if distancex < 30 and distancey < 60:
-            if distancex < 20 and distancey < 40:
-                if distancex < 10 and distancey < 20:
-                    if distancex < 5 and distancey < 15:
-                        return 4
-                    return 3
-            else:
-                return 2
+        if distancex < 5 and distancey < 15:
+            return 2
+        elif distancex < 5:
+            return 1.1
+        elif distancey < 5:
+            return 1.2
         else:
             return 1
     else:
@@ -371,18 +370,23 @@ if __name__ == '__main__':
                 # print(len(asteroids))
         for ind, a in enumerate(aliens):
             a.move()
-            if suckalien(a.rect.centerx, a.rect.centery, beamrect.centerx, beamrect.centery) == 0:
+            grav = suckalien(a.rect.centerx, a.rect.centery, beamrect.centerx, beamrect.centery)
+            if grav == 0:
                 pass
-            elif suckalien(a.rect.centerx, a.rect.centery, beamrect.centerx, beamrect.centery) == 1:
-                a.vx = (a.rect.centerx - beamrect.centerx) / -60  # real gravity
-                a.vy = (a.rect.centery - beamrect.centery - 10) / -60
-            elif suckalien(a.rect.centerx, a.rect.centery, beamrect.centerx, beamrect.centery) == 2:
-                a.vx = (a.rect.centerx - beamrect.centerx) / -35  # realer gravity
-                a.vy = (a.rect.centery - beamrect.centery) / -25
-            elif suckalien(a.rect.centerx, a.rect.centery, beamrect.centerx, beamrect.centery) == 3:
-                a.vx = (a.rect.centerx - beamrect.centerx) / -10  # super real gravity
-                a.vy = (a.rect.centery - beamrect.centery) / -10
-            elif suckalien(a.rect.centerx, a.rect.centery, beamrect.centerx, beamrect.centery) == 4:
+            elif grav == 1:
+                try:
+                    a.vx += 2 / (beamrect.centerx - a.rect.centerx)
+                    a.vy += 3 / (beamrect.centery - a.rect.centery)
+                except ZeroDivisionError:
+                    pass
+            elif grav == 1.1:
+                a.vx = (beamrect.centerx - a.rect.centerx)
+                a.vy = (beamrect.centery - a.rect.centery) / 10
+            elif grav == 1.2:
+                a.vx = (beamrect.centerx - a.rect.centerx) / 10
+                a.vy = (beamrect.centery - a.rect.centery)
+
+            elif grav == 2:
                 aliens.pop(ind)
                 random.choice(pointsounds).play()
                 score += 1
