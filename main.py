@@ -28,29 +28,29 @@ alive = True
 started = False
 clock = pygame.time.Clock()
 velocityvalues = [-1, 0, 1]
-playerimg = pygame.image.load('ufo.png')
+playerimg = pygame.image.load('assets\\ufo.png')
 playerrect = pygame.Rect((1, 1), (1, 1))
 beamrect = pygame.Rect((1, 1), (1, 1))
-tractorimgs = [pygame.image.load('tractor beam0.png'), pygame.image.load('tractor beam1.png'),
-               pygame.image.load('tractor beam2.png')]
-tractorsound = mixer.Sound('tractor beam sound.wav')
-exploder = mixer.Sound('explosion.wav')
-pointsounds = [mixer.Sound('pop0.wav'), mixer.Sound('pop1.wav'), mixer.Sound('pop2.wav')]
-bg = pygame.image.load('background.jpg')
-asteroidimg = pygame.image.load('asteroid.png')
+tractorimgs = [pygame.image.load('assets\\tractor beam0.png'), pygame.image.load('assets\\tractor beam1.png'),
+               pygame.image.load('assets\\tractor beam2.png')]
+tractorsound = mixer.Sound('assets\\tractor beam sound.wav')
+exploder = mixer.Sound('assets\\explosion.wav')
+pointsounds = [mixer.Sound('assets\\pop0.wav'), mixer.Sound('assets\\pop1.wav'), mixer.Sound('assets\\pop2.wav')]
+bg = pygame.image.load('assets\\background.jpg')
+asteroidimg = pygame.image.load('assets\\asteroid.png')
 asteroids = []
-alienimgs = [pygame.image.load('alien0.png'), pygame.image.load('alien1.png'), pygame.image.load('alien2.png')]
+alienimgs = [pygame.image.load('assets\\alien0.png'), pygame.image.load('assets\\alien1.png'), pygame.image.load('assets\\alien2.png')]
 aliens = []
 gofont = pygame.font.SysFont('Calibri', 48)
 scorefont = pygame.font.SysFont('Times New Roman', 50)
-icon = pygame.image.load('stars.png')
-mixer.music.load('background.mp3')
+icon = pygame.image.load('assets\\stars.png')
+mixer.music.load('assets\\background.mp3')
 mixer.music.play(-1)
 
 
 def saveshs():
     global highscore
-    filename = 'highscore.pk'
+    filename = 'assets\\highscore.pk'
     with open(filename, 'wb') as file:
         try:
             pickle.dump(highscore, file)
@@ -61,7 +61,7 @@ def saveshs():
 
 def loadhs():
     global highscore
-    filename = 'highscore.pk'
+    filename = 'assets\\highscore.pk'
     with open(filename, 'rb') as fi:
         try:
             highscore = pickle.load(fi)
@@ -248,8 +248,6 @@ def suckalien(alienX, alienY, beamX, beamY):
             return 2
         elif distancex < 5:
             return 1.1
-        elif distancey < 5:
-            return 1.2
         else:
             return 1
     else:
@@ -297,25 +295,25 @@ if __name__ == '__main__':
                 saveshs()
                 running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     left = True
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     right = True
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
                     up = True
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     down = True
                 if event.key == pygame.K_SPACE:
                     beaming = True
                     tractorsound.play(-1, 0, 200)
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     left = False
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     right = False
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
                     up = False
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     down = False
                 if event.key == pygame.K_SPACE:
                     beaming = False
@@ -382,10 +380,6 @@ if __name__ == '__main__':
             elif grav == 1.1:
                 a.vx = (beamrect.centerx - a.rect.centerx)
                 a.vy = (beamrect.centery - a.rect.centery) / 10
-            elif grav == 1.2:
-                a.vx = (beamrect.centerx - a.rect.centerx) / 10
-                a.vy = (beamrect.centery - a.rect.centery)
-
             elif grav == 2:
                 aliens.pop(ind)
                 random.choice(pointsounds).play()
